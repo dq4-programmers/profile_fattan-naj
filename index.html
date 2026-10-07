@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Étoile Royale — Restaurant Management</title>
+
+<style>
+:root {
+    --bg: #f4f1ea;
+    --card: #fffdf8;
+    --dark: #171717;
+    --gold: #b38a3d;
+    --gold2: #d7b56d;
+    --muted: #77736b;
+    --line: #e6dfd1;
+    --green: #2f7658;
+    --red: #a94a42;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--dark);
+    font-family: Arial, sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    background: #171717;
+    color: white;
+    padding: 25px 18px;
+}
+
+.logo {
+    font-family: Georgia, serif;
+    font-size: 25px;
+    color: #e1bd73;
+    margin: 5px 10px;
+}
+
+.sublogo {
+    color: #aaa;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin: 0 10px 28px;
+}
+
+.nav button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #bbb;
+    text-align: left;
+    padding: 13px;
+    border-radius: 10px;
+    margin: 4px 0;
+    cursor: pointer;
+}
+
+.nav button:hover,
+.nav button.active {
+    background: #292929;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    margin-left: 250px;
+    padding: 30px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+h1,
+h2,
+h3 {
+    font-family: Georgia, serif;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+.eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* CARD */
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(40,30,15,.07);
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    gap: 16px;
+}
+
+.stats {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.two {
+    grid-template-columns: 1.3fr .7fr;
+}
+
+.three {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* STAT */
+.stat .label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.stat .value {
+    font-size: 27px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.green {
+    color: var(--green);
+}
+
+.gold {
+    color: var(--gold);
+}
+
+.red {
+    color: var(--red);
+}
+
+/* SECTION */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* BUTTON */
+.btn {
+    border: none;
+    border-radius: 9px;
+    padding: 10px 14px;
+    background: var(--dark);
+    color: white;
+    cursor: pointer;
+}
+
+.btn:hover {
+    opacity: .85;
+}
+
+.goldbtn {
+    background: var(--gold);
+}
+
+.light {
+    background: #eee9df;
+    color: #222;
+}
+
+/* FORM */
+.form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.field label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 5px;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 10px;
+    background: white;
+}
+
+.field textarea {
+    min-height: 90px;
+}
+
+/* MENU */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.menu-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 15px;
+    background: white;
+}
+
+.menu-card .price {
+    color: var(--gold);
+    font-weight: bold;
+    margin-top: 7px;
+}
+
+.badge {
+    background: #f0eadc;
+    padding: 5px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+}
+
+.stars {
+    color: #d39d35;
+    letter-spacing: 2px;
+}
+
+.kpi-list {
+    display: grid;
+    gap: 10px;
+}
+
+.kpi-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.notice {
+    background: #f2ead9;
+    border-left: 4px solid var(--gold);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .two {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .stats,
+    .three,
+    .form,
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">ÉTOILE ROYALE</div>
+    <div class="sublogo">EUROPEAN FINE DINING</div>
+
+    <div class="nav">
+
+        <button class="active"
+        onclick="showSection('dashboard', this)">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="showSection('sales', this)">
+            💰 Penjualan
+        </button>
+
+        <button onclick="showSection('menus', this)">
+            🍽️ Menu 75 Item
+        </button>
+
+        <button onclick="showSection('reviews', this)">
+            ⭐ Rating & Komentar
+        </button>
+
+        <button onclick="showSection('finance', this)">
+            💳 Keuangan
+        </button>
+
+        <button onclick="showSection('reports', this)">
+            📊 Laporan
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="main">
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="section active">
+
+    <div class="top">
+
+        <div>
+            <div class="eyebrow">
+                Owner Control Center
+            </div>
+
+            <h1>
+                Dashboard Restoran
+            </h1>
+        </div>
+
+        <button class="btn goldbtn"
+        onclick="addDemoData()">
+            + Data Demo
+        </button>
+
+    </div>
+
+
+    <div class="grid stats">
+
+        <div class="card stat">
+
+            <div class="label">
+                PENGUNJUNG HARI INI
+            </div>
+
+            <div
+            id="todayVisitors"
+            class="value">
+                0
+            </div>
+
+            <div class="green">
+                orang
+            </div>
+
+        </div>
+
+
+        <div class="card stat">
+
+            <div class="label">
+                OMZET HARI INI
+            </div>
+
+            <div
+            id="todayRevenue"
+            class="value">
+                Rp 0
+            </div>
+
+            <div class="gold">
+                gross revenue
+            </div>
+
+        </div>
+
+
+        <div class="card stat">
+
+            <div class="label">
+                LABA BERSIH
+            </div>
+
+            <div
+            id="todayProfit"
+            class="value green">
+                Rp 0
+            </div>
+
+            <div>
+                setelah biaya
+            </div>
+
+        </div>
+
+
+        <div class="card stat">
+
+            <div class="label">
+                RATING RESTORAN
+            </div>
+
+            <div
+            id="averageRating"
+            class="value gold">
+                0.0 ★
+            </div>
+
+            <div id="reviewCount">
+                0 ulasan
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="grid two">
+
+        <div class="card">
+
+            <h2>
+                Ringkasan Pendapatan
+            </h2>
+
+            <div class="kpi-list">
+
+                <div class="kpi-row">
+                    <span>
+                        Hari ini
+                    </span>
+
+                    <b id="summaryDay">
+                        Rp 0
+                    </b>
+                </div>
+
+                <div class="kpi-row">
+                    <span>
+                        7 Hari
+                    </span>
+
+                    <b id="summaryWeek">
+                        Rp 0
+                    </b>
+                </div>
+
+                <div class="kpi-row">
+                    <span>
+                        Bulan ini
+                    </span>
+
+                    <b id="summaryMonth">
+                        Rp 0
+                    </b>
+                </div>
+
+                <div class="kpi-row">
+                    <span>
+                        Pengunjung bulan ini
+                    </span>
+
+                    <b id="summaryVisitors">
+                        0
+                    </b>
+                </div>
+
+                <div class="kpi-row">
+                    <span>
+                        Biaya bulan ini
+                    </span>
+
+                    <b id="summaryCosts">
+                        Rp 0
+                    </b>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Status Restoran
+            </h2>
+
+            <br>
+
+            <div class="notice">
+
+                Sistem aktif.
+                Semua data disimpan langsung
+                di browser menggunakan
+                <b>LocalStorage</b>.
+
+            </div>
+
+            <br>
+
+            <p>
+                🍽️ 25 makanan
+            </p>
+
+            <p>
+                🥤 50 minuman
+            </p>
+
+            <p>
+                👥 Monitoring pengunjung
+            </p>
+
+            <p>
+                💰 Monitoring pendapatan
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PENJUALAN ================= -->
+
+<section id="sales" class="section">
+
+    <div class="top">
+
+        <div>
+            <div class="eyebrow">
+                Daily Transactions
+            </div>
+
+            <h1>
+                Penjualan
+            </h1>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Input Penjualan
+        </h2>
+
+        <br>
+
+        <div class="form">
+
+            <div class="field">
+
+                <label>
+                    Tanggal
+                </label>
+
+                <input
+                id="saleDate"
+                type="date">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Jumlah Pengunjung
+                </label>
+
+                <input
+                id="saleVisitors"
+                type="number"
+                min="0">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Pendapatan
+                </label>
+
+                <input
+                id="saleRevenue"
+                type="number"
+                min="0"
+                placeholder="15000000">
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <button
+        class="btn goldbtn"
+        onclick="saveSale()">
+
+            Simpan Penjualan
+
+        </button>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h2>
+            Riwayat Penjualan
+        </h2>
+
+        <br>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Pengunjung</th>
+                    <th>Pendapatan</th>
+                    <th>Aksi</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="salesTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MENU ================= -->
+
+<section id="menus" class="section">
+
+    <div class="top">
+
+        <div>
+
+            <div class="eyebrow">
+                European Fine Dining
+            </div>
+
+            <h1>
+                75 Menu
+            </h1>
+
+        </div>
+
+        <select
+        id="menuFilter"
+        onchange="renderMenus()">
+
+            <option value="all">
+                Semua
+            </option>
+
+            <option value="food">
+                25 Makanan
+            </option>
+
+            <option value="drink">
+                50 Minuman
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="card">
+
+        <div
+        id="menuGrid"
+        class="menu-grid">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= REVIEW ================= -->
+
+<section id="reviews" class="section">
+
+    <div class="top">
+
+        <div>
+
+            <div class="eyebrow">
+                Customer Voice
+            </div>
+
+            <h1>
+                Rating & Komentar
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Tambah Review
+        </h2>
+
+        <br>
+
+        <div class="form">
+
+            <div class="field">
+
+                <label>
+                    Nama
+                </label>
+
+                <input
+                id="reviewName"
+                placeholder="Anonim">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Menu
+                </label>
+
+                <select
+                id="reviewMenu">
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Rating
+                </label>
+
+                <select
+                id="reviewRating">
+
+                    <option value="5">
+                        ★★★★★
+                    </option>
+
+                    <option value="4">
+                        ★★★★
+                    </option>
+
+                    <option value="3">
+                        ★★★
+                    </option>
+
+                    <option value="2">
+                        ★★
+                    </option>
+
+                    <option value="1">
+                        ★
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <div class="field">
+
+            <label>
+                Komentar
+            </label>
+
+            <textarea
+            id="reviewComment"
+            placeholder="Komentar pelanggan...">
+            </textarea>
+
+        </div>
+
+        <br>
+
+        <button
+        class="btn goldbtn"
+        onclick="saveReview()">
+
+            Simpan Review
+
+        </button>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h2>
+            Review Pelanggan
+        </h2>
+
+        <br>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Menu</th>
+                    <th>Nama</th>
+                    <th>Rating</th>
+                    <th>Komentar</th>
+                    <th>Aksi</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="reviewTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ================= KEUANGAN ================= -->
+
+<section id="finance" class="section">
+
+    <div class="top">
+
+        <div>
+
+            <div class="eyebrow">
+                Financial Control
+            </div>
+
+            <h1>
+                Keuangan
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <div class="grid three">
+
+        <div class="card">
+
+            <div>
+                MODAL
+            </div>
+
+            <h2 id="capital">
+                Rp 0
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <div>
+                KARYAWAN
+            </div>
+
+            <h2 id="employeeCost">
+                Rp 0
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <div>
+                BIAYA LAIN
+            </div>
+
+            <h2 id="otherCost">
+                Rp 0
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h2>
+            Tambah Biaya
+        </h2>
+
+        <br>
+
+        <div class="form">
+
+            <div class="field">
+
+                <label>
+                    Tanggal
+                </label>
+
+                <input
+                id="costDate"
+                type="date">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Kategori
+                </label>
+
+                <select id="costCategory">
+
+                    <option>
+                        Modal
+                    </option>
+
+                    <option>
+                        Karyawan
+                    </option>
+
+                    <option>
+                        Bahan Baku
+                    </option>
+
+                    <option>
+                        Operasional
+                    </option>
+
+                    <option>
+                        Sewa
+                    </option>
+
+                    <option>
+                        Lainnya
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Nominal
+                </label>
+
+                <input
+                id="costAmount"
+                type="number"
+                min="0">
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <input
+        id="costNote"
+        placeholder="Catatan biaya"
+        style="width:100%;padding:10px">
+
+        <br><br>
+
+        <button
+        class="btn goldbtn"
+        onclick="saveCost()">
+
+            Simpan Biaya
+
+        </button>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h2>
+            Riwayat Biaya
+        </h2>
+
+        <br>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Kategori</th>
+                    <th>Catatan</th>
+                    <th>Nominal</th>
+                    <th>Aksi</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="costTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LAPORAN ================= -->
+
+<section id="reports" class="section">
+
+    <div class="top">
+
+        <div>
+
+            <div class="eyebrow">
+                Business Intelligence
+            </div>
+
+            <h1>
+                Laporan
+            </h1>
+
+        </div>
+
+        <button
+        class="btn goldbtn"
+        onclick="window.print()">
+
+            🖨️ Cetak Laporan
+
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Laporan Hari Ini
+        </h2>
+
+        <br>
+
+        <div class="kpi-list">
+
+            <div class="kpi-row">
+                <span>
+                    Pengunjung
+                </span>
+
+                <b id="reportVisitors">
+                    0
+                </b>
+            </div>
+
+            <div class="kpi-row">
+                <span>
+                    Pendapatan
+                </span>
+
+                <b id="reportRevenue">
+                    Rp 0
+                </b>
+            </div>
+
+            <div class="kpi-row">
+                <span>
+                    Biaya
+                </span>
+
+                <b id="reportCosts">
+                    Rp 0
+                </b>
+            </div>
+
+            <div class="kpi-row">
+                <span>
+                    Laba Bersih
+                </span>
+
+                <b
+                id="reportProfit"
+                class="green">
+                    Rp 0
+                </b>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =====================================
+   DATA MENU
+===================================== */
+
+const foods = [
+
+"Beef Wellington",
+"Filet Mignon",
+"Coq au Vin",
+"Bouillabaisse",
+"Duck Confit",
+"Rack of Lamb",
+"Chicken Cordon Bleu",
+"Veal Milanese",
+"Beef Bourguignon",
+"Salmon en Croûte",
+"Truffle Risotto",
+"Lobster Thermidor",
+"Ratatouille",
+"Steak au Poivre",
+"Osso Buco",
+"Moules-Frites",
+"Paella Valenciana",
+"Spaghetti Carbonara",
+"Lasagna Classica",
+"Chicken Piccata",
+"Tournedos Rossini",
+"Seafood Linguine",
+"French Onion Soup",
+"Potato Dauphinoise",
+"Crêpe Suzette"
+
+];
+
+
+const drinks = [
+
+"Espresso",
+"Double Espresso",
+"Cappuccino",
+"Caffè Latte",
+"Macchiato",
+"Mocha",
+"Americano",
+"Flat White",
+"Affogato",
+"Irish Coffee",
+"Hot Chocolate",
+"Earl Grey Tea",
+"English Breakfast Tea",
+"Chamomile Tea",
+"Green Tea",
+"Mint Tea",
+"Iced Tea",
+"Lemon Tea",
+"Peach Tea",
+"Berry Tea",
+"Classic Lemonade",
+"Pink Lemonade",
+"Orange Fizz",
+"Ginger Ale",
+"Elderflower Spritz",
+"Sparkling Water",
+"Still Water",
+"Mineral Water",
+"Apple Juice",
+"Orange Juice",
+"Pineapple Juice",
+"Grape Juice",
+"Cranberry Juice",
+"Mango Juice",
+"Tomato Juice",
+"Strawberry Smoothie",
+"Mango Smoothie",
+"Berry Smoothie",
+"Banana Smoothie",
+"Avocado Smoothie",
+"Virgin Mojito",
+"Virgin Mary",
+"Cucumber Cooler",
+"Passion Fruit Cooler",
+"Lychee Cooler",
+"Italian Soda",
+"Berry Soda",
+"Lemon Soda",
+"Peach Soda",
+"Tropical Soda"
+
+];
+
+
+let menus = [];
+
+
+/* BUAT 25 MAKANAN */
+
+foods.forEach((name, index) => {
+
+    menus.push({
+
+        id: "food" + index,
+
+        name: name,
+
+        type: "food",
+
+        price: 150000 + index * 7500
+
+    });
+
+});
+
+
+/* BUAT 50 MINUMAN */
+
+drinks.forEach((name, index) => {
+
+    menus.push({
+
+        id: "drink" + index,
+
+        name: name,
+
+        type: "drink",
+
+        price: 35000 + index * 2500
+
+    });
+
+});
+
+
+/* =====================================
+   DATA APLIKASI
+===================================== */
+
+let data = JSON.parse(
+    localStorage.getItem("restaurantData")
+) || {
+
+    sales: [],
+
+    reviews: [],
+
+    costs: []
+
+};
+
+
+/* =====================================
+   UTILITY
+===================================== */
+
+function saveData() {
+
+    localStorage.setItem(
+        "restaurantData",
+        JSON.stringify(data)
+    );
+
+}
+
+
+function money(number) {
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
+        }
+    ).format(number || 0);
+
+}
+
+
+function today() {
+
+    return new Date()
+        .toISOString()
+        .substring(0, 10);
+
+}
+
+
+function dateFormat(date) {
+
+    return new Date(
+        date + "T00:00:00"
+    ).toLocaleDateString(
+        "id-ID",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+/* =====================================
+   NAVIGASI
+===================================== */
+
+function showSection(id, button) {
+
+    document
+        .querySelectorAll(".section")
+        .forEach(section => {
+
+            section.classList.remove("active");
+
+        });
+
+
+    document
+        .getElementById(id)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    button.classList.add("active");
+
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   PENJUALAN
+===================================== */
+
+function saveSale() {
+
+    const date =
+        document.getElementById(
+            "saleDate"
+        ).value;
+
+    const visitors =
+        Number(
+            document.getElementById(
+                "saleVisitors"
+            ).value
+        );
+
+    const revenue =
+        Number(
+            document.getElementById(
+                "saleRevenue"
+            ).value
+        );
+
+
+    if (!date || visitors < 0 || revenue < 0) {
+
+        alert("Lengkapi data penjualan.");
+
+        return;
+
+    }
+
+
+    data.sales.push({
+
+        date: date,
+
+        visitors: visitors,
+
+        revenue: revenue
+
+    });
+
+
+    saveData();
+
+    document.getElementById(
+        "saleVisitors"
+    ).value = "";
+
+    document.getElementById(
+        "saleRevenue"
+    ).value = "";
+
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   MENU
+===================================== */
+
+function renderMenus() {
+
+    const filter =
+        document.getElementById(
+            "menuFilter"
+        ).value;
+
+
+    const container =
+        document.getElementById(
+            "menuGrid"
+        );
+
+
+    let filtered = menus;
+
+
+    if (filter !== "all") {
+
+        filtered =
+            menus.filter(
+                menu =>
+                    menu.type === filter
+            );
+
+    }
+
+
+    container.innerHTML = filtered
+        .map(menu => {
+
+            return `
+
+            <div class="menu-card">
+
+                <b>
+                    ${menu.name}
+                </b>
+
+                <br><br>
+
+                <span class="badge">
+
+                    ${
+                        menu.type === "food"
+                        ? "Makanan"
+                        : "Minuman"
+                    }
+
+                </span>
+
+                <div class="price">
+
+                    ${money(menu.price)}
+
+                </div>
+
+            </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =====================================
+   REVIEW
+===================================== */
+
+function renderReviewMenu() {
+
+    const select =
+        document.getElementById(
+            "reviewMenu"
+        );
+
+
+    select.innerHTML =
+        menus.map(menu => {
+
+            return `
+
+            <option value="${menu.id}">
+
+                ${menu.name}
+
+            </option>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function saveReview() {
+
+    const name =
+        document.getElementById(
+            "reviewName"
+        ).value || "Anonim";
+
+
+    const menu =
+        document.getElementById(
+            "reviewMenu"
+        ).value;
+
+
+    const rating =
+        Number(
+            document.getElementById(
+                "reviewRating"
+            ).value
+        );
+
+
+    const comment =
+        document.getElementById(
+            "reviewComment"
+        ).value;
+
+
+    if (!comment.trim()) {
+
+        alert("Komentar belum diisi.");
+
+        return;
+
+    }
+
+
+    data.reviews.push({
+
+        name,
+        menu,
+        rating,
+        comment
+
+    });
+
+
+    saveData();
+
+    document.getElementById(
+        "reviewComment"
+    ).value = "";
+
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   BIAYA
+===================================== */
+
+function saveCost() {
+
+    const date =
+        document.getElementById(
+            "costDate"
+        ).value;
+
+    const category =
+        document.getElementById(
+            "costCategory"
+        ).value;
+
+    const amount =
+        Number(
+            document.getElementById(
+                "costAmount"
+            ).value
+        );
+
+    const note =
+        document.getElementById(
+            "costNote"
+        ).value;
+
+
+    if (!date || amount < 0) {
+
+        alert("Lengkapi data biaya.");
+
+        return;
+
+    }
+
+
+    data.costs.push({
+
+        date,
+
+        category,
+
+        amount,
+
+        note
+
+    });
+
+
+    saveData();
+
+    document.getElementById(
+        "costAmount"
+    ).value = "";
+
+    document.getElementById(
+        "costNote"
+    ).value = "";
+
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   DASHBOARD
+===================================== */
+
+function getTodaySales() {
+
+    return data.sales.filter(
+        sale =>
+            sale.date === today()
+    );
+
+}
+
+
+function getTodayCosts() {
+
+    return data.costs.filter(
+        cost =>
+            cost.date === today()
+    );
+
+}
+
+
+function renderDashboard() {
+
+    const sales =
+        getTodaySales();
+
+
+    const visitors =
+        sales.reduce(
+            (total, sale) =>
+                total + sale.visitors,
+            0
+        );
+
+
+    const revenue =
+        sales.reduce(
+            (total, sale) =>
+                total + sale.revenue,
+            0
+        );
+
+
+    const costs =
+        getTodayCosts()
+            .reduce(
+                (total, cost) =>
+                    total + cost.amount,
+                0
+            );
+
+
+    document.getElementById(
+        "todayVisitors"
+    ).textContent = visitors;
+
+
+    document.getElementById(
+        "todayRevenue"
+    ).textContent =
+        money(revenue);
+
+
+    document.getElementById(
+        "todayProfit"
+    ).textContent =
+        money(revenue - costs);
+
+
+    /* RATING */
+
+    if (data.reviews.length === 0) {
+
+        document.getElementById(
+            "averageRating"
+        ).textContent = "0.0 ★";
+
+    } else {
+
+        const average =
+            data.reviews.reduce(
+                (sum, review) =>
+                    sum + review.rating,
+                0
+            ) / data.reviews.length;
+
+
+        document.getElementById(
+            "averageRating"
+        ).textContent =
+            average.toFixed(1) + " ★";
+
+    }
+
+
+    document.getElementById(
+        "reviewCount"
+    ).textContent =
+        data.reviews.length +
+        " ulasan";
+
+
+    /* RINGKASAN */
+
+    document.getElementById(
+        "summaryDay"
+    ).textContent =
+        money(revenue);
+
+
+    const weekRevenue =
+        data.sales.reduce(
+            (total, sale) =>
+                total + sale.revenue,
+            0
+        );
+
+
+    document.getElementById(
+        "summaryWeek"
+    ).textContent =
+        money(weekRevenue);
+
+
+    document.getElementById(
+        "summaryMonth"
+    ).textContent =
+        money(weekRevenue);
+
+
+    document.getElementById(
+        "summaryVisitors"
+    ).textContent =
+        data.sales.reduce(
+            (total, sale) =>
+                total + sale.visitors,
+            0
+        );
+
+
+    document.getElementById(
+        "summaryCosts"
+    ).textContent =
+        money(
+            data.costs.reduce(
+                (total, cost) =>
+                    total + cost.amount,
+                0
+            )
+        );
+
+}
+
+
+/* =====================================
+   TABLE PENJUALAN
+===================================== */
+
+function renderSales() {
+
+    const table =
+        document.getElementById(
+            "salesTable"
+        );
+
+
+    table.innerHTML =
+        data.sales.map(
+            (sale, index) => {
+
+                return `
+
+                <tr>
+
+                    <td>
+                        ${dateFormat(sale.date)}
+                    </td>
+
+                    <td>
+                        ${sale.visitors}
+                    </td>
+
+                    <td>
+                        ${money(sale.revenue)}
+                    </td>
+
+                    <td>
+
+                        <button
+                        class="btn light"
+                        onclick="deleteSale(${index})">
+
+                            Hapus
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                `;
+
+            }
+        ).join("");
+
+
+    if (!table.innerHTML) {
+
+        table.innerHTML = `
+
+        <tr>
+
+            <td colspan="4">
+                Belum ada data.
+            </td>
+
+        </tr>
+
+        `;
+
+    }
+
+}
+
+
+function deleteSale(index) {
+
+    data.sales.splice(index, 1);
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   TABLE REVIEW
+===================================== */
+
+function renderReviews() {
+
+    const table =
+        document.getElementById(
+            "reviewTable"
+        );
+
+
+    table.innerHTML =
+        data.reviews.map(
+            (review, index) => {
+
+                const menu =
+                    menus.find(
+                        m =>
+                            m.id ===
+                            review.menu
+                    );
+
+
+                return `
+
+                <tr>
+
+                    <td>
+                        ${menu?.name || "-"}
+                    </td>
+
+                    <td>
+                        ${review.name}
+                    </td>
+
+                    <td class="stars">
+
+                        ${
+                            "★".repeat(
+                                review.rating
+                            )
+                        }
+
+                    </td>
+
+                    <td>
+                        ${review.comment}
+                    </td>
+
+                    <td>
+
+                        <button
+                        class="btn light"
+                        onclick="deleteReview(${index})">
+
+                            Hapus
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+function deleteReview(index) {
+
+    data.reviews.splice(index, 1);
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   TABLE BIAYA
+===================================== */
+
+function renderCosts() {
+
+    const table =
+        document.getElementById(
+            "costTable"
+        );
+
+
+    table.innerHTML =
+        data.costs.map(
+            (cost, index) => {
+
+                return `
+
+                <tr>
+
+                    <td>
+                        ${dateFormat(cost.date)}
+                    </td>
+
+                    <td>
+                        ${cost.category}
+                    </td>
+
+                    <td>
+                        ${cost.note}
+                    </td>
+
+                    <td>
+                        ${money(cost.amount)}
+                    </td>
+
+                    <td>
+
+                        <button
+                        class="btn light"
+                        onclick="deleteCost(${index})">
+
+                            Hapus
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+function deleteCost(index) {
+
+    data.costs.splice(index, 1);
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   KEUANGAN
+===================================== */
+
+function renderFinance() {
+
+    let capital = 0;
+
+    let employee = 0;
+
+    let other = 0;
+
+
+    data.costs.forEach(cost => {
+
+        if (cost.category === "Modal") {
+
+            capital += cost.amount;
+
+        }
+
+        else if (
+            cost.category ===
+            "Karyawan"
+        ) {
+
+            employee += cost.amount;
+
+        }
+
+        else {
+
+            other += cost.amount;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "capital"
+    ).textContent =
+        money(capital);
+
+
+    document.getElementById(
+        "employeeCost"
+    ).textContent =
+        money(employee);
+
+
+    document.getElementById(
+        "otherCost"
+    ).textContent =
+        money(other);
+
+}
+
+
+/* =====================================
+   LAPORAN
+===================================== */
+
+function renderReports() {
+
+    const sales =
+        getTodaySales();
+
+
+    const costs =
+        getTodayCosts();
+
+
+    const visitors =
+        sales.reduce(
+            (sum, sale) =>
+                sum + sale.visitors,
+            0
+        );
+
+
+    const revenue =
+        sales.reduce(
+            (sum, sale) =>
+                sum + sale.revenue,
+            0
+        );
+
+
+    const totalCosts =
+        costs.reduce(
+            (sum, cost) =>
+                sum + cost.amount,
+            0
+        );
+
+
+    document.getElementById(
+        "reportVisitors"
+    ).textContent =
+        visitors;
+
+
+    document.getElementById(
+        "reportRevenue"
+    ).textContent =
+        money(revenue);
+
+
+    document.getElementById(
+        "reportCosts"
+    ).textContent =
+        money(totalCosts);
+
+
+    document.getElementById(
+        "reportProfit"
+    ).textContent =
+        money(
+            revenue -
+            totalCosts
+        );
+
+}
+
+
+/* =====================================
+   DEMO DATA
+===================================== */
+
+function addDemoData() {
+
+    const date = today();
+
+
+    data.sales.push({
+
+        date,
+
+        visitors: 86,
+
+        revenue: 12750000
+
+    });
+
+
+    data.costs.push({
+
+        date,
+
+        category: "Karyawan",
+
+        amount: 2500000,
+
+        note: "Gaji karyawan"
+
+    });
+
+
+    data.costs.push({
+
+        date,
+
+        category: "Bahan Baku",
+
+        amount: 1750000,
+
+        note: "Bahan makanan"
+
+    });
+
+
+    data.reviews.push({
+
+        name: "Customer",
+
+        menu: "food0",
+
+        rating: 5,
+
+        comment:
+            "Pelayanan sangat baik dan makanannya luar biasa."
+
+    });
+
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+/* =====================================
+   RENDER SEMUA
+===================================== */
+
+function renderAll() {
+
+    renderDashboard();
+
+    renderSales();
+
+    renderMenus();
+
+    renderReviewMenu();
+
+    renderReviews();
+
+    renderFinance();
+
+    renderCosts();
+
+    renderReports();
+
+}
+
+
+/* =====================================
+   DEFAULT DATE
+===================================== */
+
+document.getElementById(
+    "saleDate"
+).value = today();
+
+document.getElementById(
+    "costDate"
+).value = today();
+
+
+/* START */
+
+renderAll();
+
+</script>
+
+</body>
+</html>
